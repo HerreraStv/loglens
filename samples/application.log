@@ -1,0 +1,14 @@
+2026-08-09T16:01:04Z INFO api Server starting
+2026-08-09T16:01:05Z INFO api Database connection established
+2026-08-09T16:01:07Z INFO api Listening on port 8080
+2026-08-09T16:04:13Z WARNING auth Login attempt failed for user=steven
+2026-08-09T16:04:18Z INFO auth Login successful for user=steven
+2026-08-09T16:07:22Z ERROR payments Payment provider connection timeout
+2026-08-09T16:07:23Z WARNING payments Retrying payment provider connection
+2026-08-09T16:07:25Z INFO payments Payment provider connection restored
+THIS LINE IS DELIBERATELY MALFORMED
+2026-08-09T16:12:08Z ERROR database Query execution failed
+2026-08-09T16:12:09Z WARNING database Retrying query
+2026-08-09T16:12:10Z INFO database Query completed successfully
+2026-08-09T16:15:44Z ERROR api Unhandled request processing failure
+2026-08-09T16:15:45Z INFO api Request worker recovered
