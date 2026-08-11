@@ -76,3 +76,15 @@ def test_main_rejects_invalid_level(tmp_path, capsys):
     err = capsys.readouterr().err
     assert "invalid choice" in err
     assert "Traceback" not in err
+
+
+def test_main_invalid_utf8_file_returns_nonzero_without_traceback(tmp_path, capsys):
+    log_file = tmp_path / "binary.log"
+    log_file.write_bytes(b"\xff\xfe\x00\x00not valid utf-8 \x80\x81")
+
+    exit_code = main([str(log_file)])
+
+    assert exit_code == 1
+    err = capsys.readouterr().err
+    assert "not a valid UTF-8" in err
+    assert "Traceback" not in err

@@ -1,7 +1,9 @@
 # LogLens
 
-LogLens is a small command-line tool that reads through an application's
-log file and tells you, at a glance, how healthy things look.
+LogLens is a small tool that reads through an application's log file and
+tells you, at a glance, how healthy things look. You can use it either
+from the command line or through a basic desktop window — both work the
+same way under the hood.
 
 This repository is also a hands-on learning sandbox for studying
 professional AI-assisted software development with Claude Code.
@@ -89,6 +91,35 @@ For example, filtering the log above with `--level ERROR` prints:
       WARNING:   0
       ERROR:     3
       Malformed: 1
+
+## Desktop interface
+
+If you'd rather not type commands, LogLens also has a very basic desktop
+window. It's intentionally simple — a small frontend on top of the same
+analyzer the command line uses, not a separate program. Whatever you see
+from the CLI, you get from the window too.
+
+After installing the project (see [Usage](#usage) above), launch it with:
+
+    python -m loglens.gui
+
+A small window opens with:
+
+1. A **Browse** button to pick a log file.
+2. A **Severity** dropdown: `All`, `INFO`, `WARNING`, or `ERROR` — the
+   same filtering described above, just chosen from a list instead of
+   typed as `--level`.
+3. An **Analyze** button that runs the analysis.
+4. A results area showing the same summary the CLI prints (Total lines
+   analyzed, INFO, WARNING, ERROR, Malformed).
+
+If you click Analyze before picking a file, or point it at a file that
+can't be read, you'll get a short plain-language message in the results
+area instead of a crash.
+
+This is a "Level 1" GUI on purpose — plain and functional, not
+polished. It exists so you have a no-typing option, not to replace the
+command line.
 
 ## Development
 
