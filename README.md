@@ -18,7 +18,14 @@ Install the project in editable mode:
 
     python -m pip install -e .
 
-Run the CLI:
+This is what creates the `loglens` executable: `pyproject.toml` declares a
+`[project.scripts]` entry point (`loglens = "loglens.cli:main"`), and `pip`
+turns that into a real executable inside the virtualenv —
+`.venv/Scripts/loglens.exe` on Windows, `.venv/bin/loglens` on macOS/Linux.
+
+Run the CLI (works as the bare `loglens` command once the venv is
+activated, e.g. `.venv/Scripts/Activate.ps1`; otherwise invoke it by its
+full path):
 
     loglens <path-to-log-file>
 
