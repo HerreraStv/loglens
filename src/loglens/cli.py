@@ -40,6 +40,9 @@ def main(argv: list[str] | None = None) -> int:
     except OSError as exc:
         print(f"loglens: could not read '{args.log_file}': {exc.strerror or exc}", file=sys.stderr)
         return 1
+    except UnicodeDecodeError:
+        print(f"loglens: '{args.log_file}' is not a valid UTF-8 text file", file=sys.stderr)
+        return 1
 
     print(format_summary(summary))
     return 0
