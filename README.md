@@ -1,16 +1,94 @@
-# LogLens — Claude Code Learning Sandbox
-
 # LogLens
 
-LogLens is a small Python command-line tool for analyzing application log files.
+LogLens is a small command-line tool that reads through an application's
+log file and tells you, at a glance, how healthy things look.
 
-This repository is also a hands-on learning sandbox for studying professional AI-assisted software development with Claude Code.
+This repository is also a hands-on learning sandbox for studying
+professional AI-assisted software development with Claude Code.
 
-## Current Status
+## What problem does it solve?
 
-The project scaffold is complete.
+A log file is a text file an application writes to while it's running,
+recording what it did — normal activity, warnings, and outright errors,
+all mixed together. These files get long fast, and scrolling through
+thousands of lines by hand just to answer "how many things went wrong
+today?" is slow and easy to get wrong.
 
-Version 1 of the log analyzer is implemented: it accepts a log file path, reads it safely, and reports counts of INFO, WARNING, ERROR, and malformed lines along with the total lines analyzed. See `SPEC.md` for the requirements.
+LogLens reads the file for you and counts how many lines fall into each
+category, so you get a short summary instead of a wall of text.
+
+## What kind of log file does it read?
+
+LogLens expects one entry per line, roughly in this shape:
+
+    TIMESTAMP LEVEL COMPONENT MESSAGE
+
+For example:
+
+    2026-08-09T16:07:22Z ERROR payments Payment provider connection timeout
+
+The second word — `ERROR` here — is the line's **severity level**, and
+it's what LogLens uses to sort each line into a category:
+
+- **INFO** — routine, expected activity (e.g. "server started").
+- **WARNING** — something worth noticing, but not necessarily broken (e.g.
+  a retry).
+- **ERROR** — something went wrong.
+- **Malformed** — a line that doesn't match the expected shape above, so
+  LogLens can't tell what severity it is. These are counted separately
+  rather than silently skipped, so you always know if part of the log is
+  unreadable.
+
+## What the output tells you
+
+Running LogLens against a log file prints a short summary like this:
+
+    Total lines analyzed: 14
+      INFO:      7
+      WARNING:   3
+      ERROR:     3
+      Malformed: 1
+
+- **Total lines analyzed** is every non-empty line LogLens looked at.
+- The four rows underneath break that total down by category.
+
+## Usage
+
+Install the project in editable mode (see [Development](#development) for
+what this does):
+
+    python -m pip install -e .
+
+Run it against a log file:
+
+    loglens <path-to-log-file>
+
+### Filtering by severity
+
+To focus on just one severity level, add `--level`:
+
+    loglens <path-to-log-file> --level ERROR
+
+Valid levels are `INFO`, `WARNING`, and `ERROR`, and you can type them in
+any case — `--level error` works the same as `--level ERROR`.
+
+Filtering only changes the **severity counters** (INFO/WARNING/ERROR).
+Two things stay the same either way:
+
+- **Total lines analyzed always counts every non-empty line in the file**,
+  not just the ones matching the filter — it tells you how much of the
+  file LogLens actually looked at.
+- **Malformed lines are still counted and shown**, even while filtering by
+  severity, since a malformed line is a data problem worth knowing about
+  regardless of which level you asked for.
+
+For example, filtering the log above with `--level ERROR` prints:
+
+    Total lines analyzed: 14
+      INFO:      0
+      WARNING:   0
+      ERROR:     3
+      Malformed: 1
 
 ## Development
 
@@ -22,12 +100,8 @@ This is what creates the `loglens` executable: `pyproject.toml` declares a
 `[project.scripts]` entry point (`loglens = "loglens.cli:main"`), and `pip`
 turns that into a real executable inside the virtualenv —
 `.venv/Scripts/loglens.exe` on Windows, `.venv/bin/loglens` on macOS/Linux.
-
-Run the CLI (works as the bare `loglens` command once the venv is
-activated, e.g. `.venv/Scripts/Activate.ps1`; otherwise invoke it by its
-full path):
-
-    loglens <path-to-log-file>
+It's usable as the bare `loglens` command once the venv is activated
+(e.g. `.venv/Scripts/Activate.ps1`), or invoked directly by its full path.
 
 Run the tests:
 
