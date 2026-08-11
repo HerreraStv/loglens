@@ -28,25 +28,27 @@ def classify_line(line: str) -> str | None:
     return None
 
 
-def analyze_lines(lines: Iterable[str]) -> LogSummary:
+def analyze_lines(lines: Iterable[str], level: str | None = None) -> LogSummary:
+    """`total`/`malformed` count every non-blank line; `level` only gates the severity counters."""
     summary = LogSummary()
     for raw_line in lines:
         line = raw_line.strip()
         if not line:
             continue
         summary.total += 1
-        level = classify_line(line)
-        if level == "INFO":
-            summary.info += 1
-        elif level == "WARNING":
-            summary.warning += 1
-        elif level == "ERROR":
-            summary.error += 1
-        else:
+        detected = classify_line(line)
+        if detected is None:
             summary.malformed += 1
+        elif level is None or detected == level:
+            if detected == "INFO":
+                summary.info += 1
+            elif detected == "WARNING":
+                summary.warning += 1
+            elif detected == "ERROR":
+                summary.error += 1
     return summary
 
 
-def analyze_file(path: Path | str) -> LogSummary:
+def analyze_file(path: Path | str, level: str | None = None) -> LogSummary:
     with open(path, encoding="utf-8") as f:
-        return analyze_lines(f)
+        return analyze_lines(f, level=level)

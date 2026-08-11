@@ -15,8 +15,12 @@ or changing behavior. Do not treat this file as a substitute for it.
 
 ## Current state
 
-The project is a scaffold only. `src/loglens/cli.py` is a stub — the actual
-parser has not been implemented yet. This is intentional, not a bug.
+The core parser and CLI are implemented per `SPEC.md`. `loglens <path-to-log-file>`
+reads a log file and prints a severity summary (INFO/WARNING/ERROR and
+malformed-line counts, plus total lines analyzed). An optional `--level`
+flag (`INFO`, `WARNING`, or `ERROR`, case-insensitive) filters the summary
+to a single severity: filtering only changes the severity counters — the
+total and malformed counts always reflect every non-empty line examined.
 
 ## Engineering constraints (from SPEC.md)
 
@@ -47,12 +51,10 @@ these, stop and ask rather than assuming scope has expanded.
 ## Workflow
 
 - Install: `python -m pip install -e .`
-- Run (currently a stub — prints a placeholder, takes no arguments):
-  `loglens`
+- Run:
+  - `loglens <path-to-log-file>`
+  - `loglens <path-to-log-file> --level ERROR` (filter to one severity;
+    `INFO`/`WARNING`/`ERROR`, case-insensitive)
 - Test: `python -m pytest`
-- Once argument parsing and the analyzer are implemented per SPEC.md, this
-  section should be updated to document the real invocation
-  (`loglens <path-to-log-file>`) and its exit-code behavior.
-- Every new behavior in SPEC.md's requirements list should have a
-  corresponding test — the current test suite is only a smoke test and
-  needs real coverage as the parser is built.
+- Every behavior listed in SPEC.md's requirements should have a
+  corresponding test — keep this true as the project grows.
